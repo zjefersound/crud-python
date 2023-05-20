@@ -3,7 +3,8 @@ from sqlite3 import Error, OperationalError
 from time import sleep
 from database.db import conectarBanco
 
-from models import funcionarios
+from views import funcionarios
+from models import funcionarios as funcionarios_model
 
 def menu(conexao):
     opcao = 1
@@ -33,7 +34,7 @@ def menu(conexao):
         elif opcao == 5:
             funcionarios.pesquisar(conexao)
         elif opcao != 6:
-            print('Opção inválida, tente novamente')
+            print('[!] Opção inválida, tente novamente')
             sleep(2)
         print()
     return opcao
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     while True:
         try:
             conn = conectarBanco()
-            funcionarios.criar_tabela(conn)
+            funcionarios_model.criar_tabela(conn)
             if menu(conn) == 6:
                 break
         except OperationalError as e:

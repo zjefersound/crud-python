@@ -3,7 +3,6 @@ from time import sleep
 
 from validation.index import data_valida
 
-
 def criar_tabela(conexao):
     cursor = conexao.cursor()
     cursor.execute("""
@@ -19,14 +18,17 @@ def criar_tabela(conexao):
         cursor.close()
 
 
-def mostrar_registro(registro):
-    print('\n====================')
-    print('Registro')
-    print('--------')
+def mostrar_registro_conteudo(registro):
     print('ID:', registro[0])
     print('Nome:', registro[1])
     print('Data de nascimento:', registro[2])
     print('Salário:', registro[3])
+
+def mostrar_registro(registro):
+    print('\n====================')
+    print('Registro')
+    print('--------')
+    mostrar_registro_conteudo(registro)
     print('====================')
 
 
@@ -60,10 +62,7 @@ def listar(conexao):
     registros = cursor.fetchall()
 
     for registro in registros:
-        print('ID:', registro[0])
-        print('Nome:', registro[1])
-        print('Data de nascimento:', registro[2])
-        print('Salário:', registro[3])
+        mostrar_registro_conteudo(registro)
         print('-----')
     pausa()
 

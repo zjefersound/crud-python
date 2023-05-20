@@ -1,28 +1,9 @@
 import sqlite3
 from sqlite3 import Error, OperationalError
-import os
 from time import sleep
+from database.db import conectarBanco
 
-from models.funcionarios import criar_tabela, incluir, alterar, excluir, listar
-
-
-def conectarBanco():
-    conexao = None
-    diretorio = 'database'
-    banco = 'unoesc.db'
-    print(f'SQLite versão: {sqlite3.version}\n')
-    path = os.path.dirname(os.path.abspath(__file__))
-    full_path = os.path.join(path, diretorio, banco)
-    print(f'Banco de dados: [{full_path}]\n')
-    if not os.path.isfile(full_path):
-        continuar = input(
-            f'Banco de dados não encontrado, deseja criá-lo? \nSe sim, então o banco de dados será criado no diretório onde o programa está sendo executado[{os.getcwd()}]! [S/N]: ')
-        if continuar.upper() != 'S':
-            raise sqlite3.DatabaseError('Banco de dados não selecionado!')
-    conexao = sqlite3.connect(full_path)
-    print('BD aberto com sucesso!')
-    return conexao
-
+from models import funcionarios
 
 def menu(conexao):
     opcao = 1
@@ -41,13 +22,13 @@ def menu(conexao):
         except ValueError:
             opcao = 0
         if opcao == 1:
-            incluir(conexao)
+            funcionarios.incluir(conexao)
         elif opcao == 2:
-            alterar(conexao)
+            funcionarios.alterar(conexao)
         elif opcao == 3:
-            excluir(conexao)
+            funcionarios.excluir(conexao)
         elif opcao == 4:
-            listar(conexao)
+            funcionarios.listar(conexao)
         elif opcao != 5:
             print('Opção inválida, tente novamente')
             sleep(2)
@@ -60,7 +41,7 @@ if __name__ == '__main__':
     while True:
         try:
             conn = conectarBanco()
-            criar_tabela(conn)
+            funcionarios.criar_tabela(conn)
             if menu(conn) == 5:
                 break
         except OperationalError as e:

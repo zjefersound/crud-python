@@ -7,7 +7,7 @@ from models import funcionarios
 
 def menu(conexao):
     opcao = 1
-    while opcao != 5:
+    while opcao != 6:
         print('---------------------------')
         print('PORTAL DO RH > FUNCIONÁRIOS')
         print('---------------------------')
@@ -15,10 +15,11 @@ def menu(conexao):
         print('2. Alterar dados')
         print('3. Excluir dados')
         print('4. Listar dados')
-        print('5. Sair')
+        print('5. Pesquisar')
+        print('6. Sair')
 
         try:
-            opcao = int(input('\nOpção [1-5]: '))
+            opcao = int(input('\nOpção [1-6]: '))
         except ValueError:
             opcao = 0
         if opcao == 1:
@@ -29,7 +30,9 @@ def menu(conexao):
             funcionarios.excluir(conexao)
         elif opcao == 4:
             funcionarios.listar(conexao)
-        elif opcao != 5:
+        elif opcao == 5:
+            funcionarios.pesquisar(conexao)
+        elif opcao != 6:
             print('Opção inválida, tente novamente')
             sleep(2)
         print()
@@ -42,7 +45,7 @@ if __name__ == '__main__':
         try:
             conn = conectarBanco()
             funcionarios.criar_tabela(conn)
-            if menu(conn) == 5:
+            if menu(conn) == 6:
                 break
         except OperationalError as e:
             print('Erro operacional:', e)

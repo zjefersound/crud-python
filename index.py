@@ -94,7 +94,7 @@ def listar(conexao):
     registros = cursor.fetchall()
 
     for registro in registros:
-        print('ID..:', registro[0])
+        print('ID:', registro[0])
         print('Nome:', registro[1])
         print('Data de nascimento:', registro[2])
         print('Salário:', registro[3])
@@ -139,7 +139,41 @@ def incluir(conexao):
 
 
 def alterar(conexao):
-    print('alterar')
+    id = exibir_cabecalho('inclusão')
+    if int(id) == 0:
+        return
+    resultado = verificar_registro_existe(conexao, id)
+    if not resultado:
+        print('\nID não existe!')
+        sleep(2)
+    else:
+        mostrar_registro(resultado)
+
+        # Corrigir duplicação de código desnecessária
+        
+        nome = input('\nNome: ')
+        data_de_nascimento = None
+        while True:
+            data_de_nascimento = input('\nData de nascimento (AAAA-MM-DD): ')
+            if data_valida(data_de_nascimento):
+                break
+            print("[!] Data inválida. Verifique a formatação")
+
+        salario = None
+        while True:
+            try:
+                salario = float(input('\nSalário (0000.00): '))
+                break
+            except:
+                print("[!] Salário inválido. Tente novamente")
+
+        confirma = input('\nConfirma a alteração [S/N]? ').upper()
+        if confirma == 'S':
+            cursor = conexao.cursor()
+            cursor.execute('UPDATE funcionarios SET nome=?, data_de_nascimento=?, salario=? WHERE id=?',
+                           (nome, data_de_nascimento, salario, id))
+            conexao.commit()
+            cursor.close()
 
 
 def excluir(conexao):

@@ -4,15 +4,8 @@ import os
 from time import sleep
 
 from validation.index import data_valida
-
-
-def exibir_cabecalho(mensagem):
-    mensagem = f'Rotina de {mensagem} de dados'
-    print('\n' + '-' * len(mensagem))
-    print(mensagem)
-    print('\n' + '-' * len(mensagem))
-    id = input('ID (0 para voltar): ')
-    return id
+from cli.index import pausa, exibir_cabecalho
+from models.funcionarios import criar_tabela
 
 
 def mostrar_registro(registro):
@@ -43,10 +36,6 @@ def verificar_registro_existe(conexao, id):
     return resultado
 
 
-def pausa():
-    input('\nPressione <ENTER> para continuar')
-
-
 def conectarBanco():
     conexao = None
     diretorio = 'database'
@@ -63,21 +52,6 @@ def conectarBanco():
     conexao = sqlite3.connect(full_path)
     print('BD aberto com sucesso!')
     return conexao
-
-
-def criar_tabela(conexao):
-    cursor = conexao.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS funcionarios (
-            id INTEGER PRIMARY KEY,
-            nome INTEGER,
-            data_de_nascimento TEXT,
-            salario REAL
-        )
-        """)
-    conexao.commit()
-    if cursor:
-        cursor.close()
 
 
 def listar(conexao):

@@ -6,5 +6,6 @@ def exibir_cabecalho(mensagem):
     id = input('ID (0 para voltar): ')
     return id
 
+
 def pausa():
     input('\nPressione <ENTER> para continuar')

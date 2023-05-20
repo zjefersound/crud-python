@@ -3,6 +3,8 @@ from sqlite3 import Error, OperationalError
 import os
 from time import sleep
 
+from validation.index import data_valida
+
 def exibir_cabecalho(mensagem):
     mensagem = f'Rotina de {mensagem} de dados'
     print('\n' + '-' * len(mensagem))
@@ -57,15 +59,15 @@ def conectarBanco():
             f'Banco de dados não encontrado, deseja criá-lo? \nSe sim, então o banco de dados será criado no diretório onde o programa está sendo executado[{os.getcwd()}]! [S/N]: ')
         if continuar.upper() != 'S':
             raise sqlite3.DatabaseError('Banco de dados não selecionado!')
-        conexao = sqlite3.connect(full_path)
-        print('BD aberto com sucesso!')
+    conexao = sqlite3.connect(full_path)
+    print('BD aberto com sucesso!')
     return conexao
 
 
 def criar_tabela(conexao):
     cursor = conexao.cursor()
     cursor.execute("""
-        CREATE TABLE funcionarios (
+        CREATE TABLE IF NOT EXISTS funcionarios (
             id INTEGER PRIMARY KEY,
             nome INTEGER,
             data_de_nascimento TEXT,
@@ -112,7 +114,12 @@ def incluir(conexao):
         sleep(2)
     else:
         nome = input('\nNome: ')
-        data_de_nascimento = input('\nData de nascimento (AAAA-MM-DD): ')
+        data_de_nascimento = None
+        while True:
+            data_de_nascimento = input('\nData de nascimento (AAAA-MM-DD): ')
+            if data_valida(data_de_nascimento):
+                break
+            print("[!] Data inválida. Verifique a formatação")
         salario = float(input('\nSalario: '))
         confirma = input('\nConfirma a inclusão [S/N]? ').upper()
         
@@ -167,12 +174,7 @@ if __name__ == '__main__':
     while True:
         try:
             conn = conectarBanco()
-            criar_tabela(conn)
-            # incluirUmRegistro(conn)
-            # incluirVariosRegistros(conn)
-            print('menu')
-            print(conn)
-            
+            criar_tabela(conn)            
             if menu(conn) == 5:
                 break
         except OperationalError as e:

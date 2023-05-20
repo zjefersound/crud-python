@@ -104,7 +104,26 @@ def listar(conexao):
 
 # add missing methods
 def incluir(conexao):
-    print('incluir')
+    id = exibir_cabecalho('inclusão')
+    if int(id) == 0:
+        return  
+    if verificar_registro_existe(conexao, id):
+        print('\nID já existe!')
+        sleep(2)
+    else:
+        nome = input('\nNome: ')
+        data_de_nascimento = input('\nData de nascimento (AAAA-MM-DD): ')
+        salario = float(input('\nSalario: '))
+        confirma = input('\nConfirma a inclusão [S/N]? ').upper()
+        
+        if confirma == 'S':
+            comando = f'INSERT INTO funcionarios VALUES({id}, "{nome}", "{data_de_nascimento}", {salario})'
+            print(comando)
+            cursor = conexao.cursor()
+            cursor.execute(comando)
+            conexao.commit()
+            cursor.close()
+
 
 def alterar(conexao):
     print('alterar')

@@ -5,6 +5,7 @@ from time import sleep
 
 from validation.index import data_valida
 
+
 def exibir_cabecalho(mensagem):
     mensagem = f'Rotina de {mensagem} de dados'
     print('\n' + '-' * len(mensagem))
@@ -85,8 +86,6 @@ def listar(conexao):
         pausa()
         return
 
-    
-
     print('\n----------------------')
     print('Listagem dos Registros')
     print('----------------------\n')
@@ -104,11 +103,11 @@ def listar(conexao):
 
     cursor.close()
 
-# add missing methods
+
 def incluir(conexao):
     id = exibir_cabecalho('inclusão')
     if int(id) == 0:
-        return  
+        return
     if verificar_registro_existe(conexao, id):
         print('\nID já existe!')
         sleep(2)
@@ -120,9 +119,16 @@ def incluir(conexao):
             if data_valida(data_de_nascimento):
                 break
             print("[!] Data inválida. Verifique a formatação")
-        salario = float(input('\nSalario: '))
+
+        salario = None
+        while True:
+            try:
+                salario = float(input('\nSalário (0000.00): '))
+                break
+            except:
+                print("[!] Salário inválido. Tente novamente")
         confirma = input('\nConfirma a inclusão [S/N]? ').upper()
-        
+
         if confirma == 'S':
             comando = f'INSERT INTO funcionarios VALUES({id}, "{nome}", "{data_de_nascimento}", {salario})'
             print(comando)
@@ -135,15 +141,17 @@ def incluir(conexao):
 def alterar(conexao):
     print('alterar')
 
+
 def excluir(conexao):
     print('excluir')
+
 
 def menu(conexao):
     opcao = 1
     while opcao != 5:
-        print('--------------')
-        print('MENU DE OPÇÕES')
-        print('--------------')
+        print('---------------------------')
+        print('PORTAL DO RH > FUNCIONÁRIOS')
+        print('---------------------------')
         print('1. Incluir dados')
         print('2. Alterar dados')
         print('3. Excluir dados')
@@ -167,25 +175,23 @@ def menu(conexao):
             sleep(2)
         print()
     return opcao
-    
-    
+
+
 if __name__ == '__main__':
     conn = None
     while True:
         try:
             conn = conectarBanco()
-            criar_tabela(conn)            
+            criar_tabela(conn)
             if menu(conn) == 5:
                 break
         except OperationalError as e:
             print('Erro operacional:', e)
         except sqlite3.DatabaseError as e:
             print('Erro database:', e)
-            # Não mostra o traceback
             raise SystemExit()
         except Error as e:
             print('Erro SQLite3:', e)
-            # Não mostra o traceback
             raise SystemExit()
         except Exception as e:
             print('Erro durante a execução do sistema!')

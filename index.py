@@ -139,7 +139,7 @@ def incluir(conexao):
 
 
 def alterar(conexao):
-    id = exibir_cabecalho('inclusão')
+    id = exibir_cabecalho('alteração')
     if int(id) == 0:
         return
     resultado = verificar_registro_existe(conexao, id)
@@ -150,7 +150,7 @@ def alterar(conexao):
         mostrar_registro(resultado)
 
         # Corrigir duplicação de código desnecessária
-        
+
         nome = input('\nNome: ')
         data_de_nascimento = None
         while True:
@@ -177,7 +177,26 @@ def alterar(conexao):
 
 
 def excluir(conexao):
-    print('excluir')
+    if tabela_vazia(conexao):
+        print('\n*** TABELA VAZIA ***')
+        pausa()
+        return
+    id = exibir_cabecalho('exclusão')
+    if int(id) == 0:
+        return
+    resultado = verificar_registro_existe(conexao, id)
+    if not resultado:
+        print('\nID não existe!')
+        sleep(2)
+    else:
+        mostrar_registro(resultado)
+        confirma = input('\nConfirma a exclusão [S/N]? ').upper()
+
+        if confirma == 'S':
+            cursor = conexao.cursor()
+            cursor.execute('DELETE FROM funcionarios WHERE id=?', (id,))
+            conexao.commit()
+            cursor.close()
 
 
 def menu(conexao):

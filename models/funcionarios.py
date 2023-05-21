@@ -38,7 +38,8 @@ def buscar_por_id(conexao, id):
 
 def buscar_por_nome(conexao, nome):
     cursor = conexao.cursor()
-    cursor.execute('SELECT * FROM funcionarios WHERE nome LIKE ?', (nome,))
+    comando = f'SELECT * FROM funcionarios WHERE nome LIKE "%{nome}%"'
+    cursor.execute(comando)
     resultado = cursor.fetchall()
     cursor.close()
     return resultado
